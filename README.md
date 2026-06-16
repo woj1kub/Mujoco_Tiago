@@ -1,6 +1,6 @@
 # Tiago MuJoCo Demo — Repository
 
-English README to reproduce the Tiago + MuJoCo simulation and perception pipeline used for the project.
+Everything in this repository was run inside WSL Ubuntu 22.04 LTS and used ROS2 Humble
 
 **Important — First step (required)**
 Before anything else, follow the ROS/Gazebo setup instructions from the original TIAGo Gazebo repository `hri-manipulacion`. That repository provides the ROS packages, URDF/Xacro files and MoveIt configuration required to generate the robot URDF and to populate your ROS2 workspace. Only after completing those steps should you proceed to the MuJoCo port in this repository.
@@ -21,7 +21,7 @@ Typical tasks performed from `hri-manipulacion` README (do these first):
 After verifying the ROS/Gazebo setup from `hri-manipulacion`, return here and continue with the MuJoCo-specific steps in this README.
 
 **Overview**
-- This repository contains a MuJoCo scene and a Python node (`tiago_v3.py`) that simulates a TIAGo robot, publishes RGB+depth images, listens for YOLO 3D detections and forwards goals to MoveIt for planning. The repo also includes a YOLO model `yolov8m.pt` used by the ROS2 YOLO bringup.
+- This repository contains a MuJoCo scene and a Python node (`tiago_mujoco.py`) that simulates a TIAGo robot, publishes RGB+depth images, listens for YOLO 3D detections and forwards goals to MoveIt for planning. The repo also includes a YOLO model `yolov8m.pt` used by the ROS2 YOLO bringup.
 
 **Repository contents**
 - `scalony.xml` — MuJoCo scene (auxiliary)
@@ -166,8 +166,6 @@ ros2 launch tiago_moveit_config move_group.launch.py use_sim_time:=True
 5. Start the MuJoCo simulation + ROS node. From this repository run:
 
 ```bash
-python3 tiago_v3.py
-# or if you keep an older script name:
 # python3 tiago_mujoco.py
 ```
 
@@ -183,7 +181,7 @@ ros2 run rqt_image_view rqt_image_view
 - Make sure topic namespaces and frame IDs match across YOLO, MoveIt and the simulation (the example uses `head_front_camera_link` and `base_link`).
 - If the MoveIt action server name differs, update the `MoveGroup` action client/topic in `tiago_v3.py`.
 - If MuJoCo rendering fails or OpenGL issues appear, try setting `MUJOCO_GL` environment variable (e.g. `glfw`, `egl`), or run in headless mode.
-- Ensure `cv_bridge` and the ROS2 Python bindings are available for the Python interpreter running `tiago_v3.py`. Usually sourcing ROS2 workspace provides the required Python paths.
+- Ensure `cv_bridge` and the ROS2 Python bindings are available for the Python interpreter running `tiago_mujoco.py`. Usually sourcing ROS2 workspace provides the required Python paths.
 
 **Credits & references**
 - MuJoCo menagerie: https://github.com/google-deepmind/mujoco_menagerie
@@ -211,5 +209,5 @@ To use them:
 ```
 
 Notes:
-- `tiago_v3.py` is not packaged as a ROS package here — the `start_all.sh` assumes you will run it directly from this repository after sourcing ROS2 and your workspace.
+- `tiago_mujoco.py` is not packaged as a ROS package here — the `start_all.sh` assumes you will run it directly from this repository after sourcing ROS2 and your workspace.
 - `requirements.txt` contains only non-ROS Python packages; ROS packages must be provided by your ROS2 installation and workspace.
